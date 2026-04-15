@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Material Symbols Outlined ─── */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.material-symbols-outlined.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ─── The Judicial Atelier — Design System ─── */
+
+:root {
+  /* Light mode */
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #f3f4f5;
+  --bg-card: #ffffff;
+  --border: rgba(196, 198, 208, 0.4);
+  --text-primary: #191c1d;
+  --text-secondary: #44474f;
+  --sidebar-bg: #f3f4f5;
+  --sidebar-border: #e7e8e9;
+  --primary: #002452;
+  --secondary: #0051d5;
+  --primary-fixed: #d7e2ff;
+}
+
+.dark {
+  /* Dark mode — slate navy */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --border: rgba(51, 65, 85, 0.8);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --sidebar-bg: #0f172a;
+  --sidebar-border: #1e293b;
+  --primary: #38bdf8;
+  --secondary: #60a5fa;
+  --primary-fixed: #1e293b;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply transition-colors duration-200;
+    font-family: 'Heebo', 'Inter', sans-serif;
+  }
+
+  * {
+    @apply antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(0, 36, 82, 0.15); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0, 36, 82, 0.3); }
+  .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+  .dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+}
+
+@layer utilities {
+  /* ─── Layout ─── */
+  .bg-app-primary    { background-color: var(--bg-primary); }
+  .bg-app-secondary  { background-color: var(--bg-secondary); }
+  .bg-app-card       { background-color: var(--bg-card); }
+  .border-app        { border-color: var(--border); }
+  .text-app-primary  { color: var(--text-primary); }
+  .text-app-secondary{ color: var(--text-secondary); }
+  .bg-sidebar        { background-color: var(--sidebar-bg); }
+  .border-sidebar    { border-color: var(--sidebar-border); }
+
+  /* ─── Status border strips (right, RTL) ─── */
+  .status-overdue   { border-right-color: #ba1a1a !important; }
+  .status-urgent    { border-right-color: #EA580C !important; }
+  .status-warning   { border-right-color: #fcb87d !important; }
+  .status-normal    { border-right-color: #acc7ff !important; }
+  .status-completed { border-right-color: #4ade80 !important; }
+
+  /* ─── Glassmorphism nav ─── */
+  .glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .dark .glass-nav {
+    background: rgba(30, 41, 59, 0.90);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* ─── Primary CTA button ─── */
+  .btn-primary {
+    background: linear-gradient(135deg, #002452 0%, #1b3a6b 100%);
+    color: #ffffff;
+    font-weight: 700;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.92; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* ─── Input fields ─── */
+  .input-judicial {
+    background: #f3f4f5;
+    color: #191c1d;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.875rem 1rem;
+    transition: box-shadow 0.2s;
+    width: 100%;
+  }
+  .dark .input-judicial {
+    background: #1e293b;
+    color: #f8fafc;
+  }
+  .input-judicial::placeholder { color: #747780; }
+  .input-judicial:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 81, 213, 0.2);
+  }
+
+  /* ─── Active nav item ─── */
+  .nav-active {
+    background-color: #d7e2ff;
+    color: #0051d5;
+    font-weight: 700;
+  }
+  .dark .nav-active {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+  }
+
+  /* ─── Slide-up animation ─── */
+  .animate-slide-up {
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
