@@ -19,6 +19,7 @@ interface TaskModalProps {
   mode: Mode
   task?: Task
   defaultType?: 'work' | 'personal'
+  defaultCaseId?: string | null
   onSaved?: (task: Task) => void
   onDeleted?: (taskId: string) => void
 }
@@ -33,9 +34,9 @@ const defaultForm = {
   court: '',
 }
 
-export function TaskModal({ open, onClose, mode, task, defaultType, onSaved, onDeleted }: TaskModalProps) {
+export function TaskModal({ open, onClose, mode, task, defaultType, defaultCaseId, onSaved, onDeleted }: TaskModalProps) {
   const isCreating = mode === 'create'
-  const [form, setForm] = useState({ ...defaultForm, type: defaultType || 'work' })
+  const [form, setForm] = useState({ ...defaultForm, type: defaultType || 'work', case_id: defaultCaseId ?? null })
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [completing, setCompleting] = useState(false)
@@ -67,7 +68,7 @@ export function TaskModal({ open, onClose, mode, task, defaultType, onSaved, onD
         .catch(() => {})
         .finally(() => setLoadingUpdates(false))
     } else {
-      setForm({ ...defaultForm, type: defaultType || 'work' })
+      setForm({ ...defaultForm, type: defaultType || 'work', case_id: defaultCaseId ?? null })
       setUpdates([])
     }
     setShowCompleteForm(false)

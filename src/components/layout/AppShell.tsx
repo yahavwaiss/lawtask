@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { Sidebar } from './Sidebar'
 import { BottomNav } from './BottomNav'
 import { FloatingActionButton } from './FloatingActionButton'
@@ -9,6 +10,11 @@ import { TaskModal } from '@/components/tasks/TaskModal'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [taskModalOpen, setTaskModalOpen] = useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
+
+  // If user is on a case page (/cases/[id]), pre-fill the case in the modal
+  const caseIdFromPath = pathname?.match(/^\/cases\/([a-f0-9-]{36})/)?.[1] ?? null
 
   return (
     <div className="min-h-screen bg-app-primary flex">
@@ -49,8 +55,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         open={taskModalOpen}
         onClose={() => setTaskModalOpen(false)}
         mode="create"
+        defaultCaseId={caseIdFromPath}
         onSaved={(task) => {
           window.dispatchEvent(new CustomEvent('lawtask:task-saved', { detail: task }))
+          router.refresh()
         }}
       />
     </div>
