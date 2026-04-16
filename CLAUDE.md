@@ -34,11 +34,13 @@ Next.js 14.2.35 + TypeScript + Tailwind v3 + Supabase + Gemini 2.5 Flash + Teleg
 - Telegram bot / service operations → `createServiceClient()` מ-`server.ts`
 
 ## ⚠️ מלכודות
-- `@react-pdf/renderer` דורש `serverExternalPackages` ב-`next.config.ts`
+- `@react-pdf/renderer` דורש `serverExternalPackages` ב-`next.config.mjs`
 - Telegram bot: `polling: false` בלבד (serverless!)
 - Vercel crons ב-UTC — ישראל UTC+3 (קיץ)
 - Tailwind v3 — לא v4
 - Hebrew PDF: חייב Font.register עם Heebo TTF ב-`public/fonts/`
+- ESLint v9 לא תואם ל-`eslint-config-next@14.2.x` — נפתר עם `.npmrc`: `legacy-peer-deps=true`
+- Supabase nested-select TypeScript inference מחזיר `never` — cast ל-`any` לפני שימוש
 
 ## 🗂️ DB Schema (Supabase SQL)
 ```sql
@@ -51,8 +53,20 @@ CREATE TABLE telegram_sessions (...);
 -- ראה schema מלא בסוף הקובץ הזה
 ```
 
+## 🌍 Production
+- **URL**: https://lawtask.vercel.app
+- **GitHub**: https://github.com/yahavwaiss/lawtask (public)
+- **Vercel project**: yahavwaiss-projects/lawtask
+- **Supabase project**: igoynbxvklthsdhgoaph
+
+### סטטוס דיפלוי (2026-04-16)
+- [x] Vercel — deployed ✅
+- [x] Supabase Site URL — מעודכן ל-`https://lawtask.vercel.app`
+- [x] Supabase Redirect URLs — `https://lawtask.vercel.app/**`
+- [ ] Telegram webhook — טרם נרשם
+
 ## 🚀 Deploy Checklist
-1. הוסף כל env vars ל-Vercel Settings
+1. ✅ הוסף כל env vars ל-Vercel Settings
 2. הרץ SQL migrations ב-Supabase SQL Editor
 3. רשום Telegram webhook:
    ```
