@@ -43,14 +43,12 @@ export default function CaseDetailPage() {
   }, [id, router])
 
   useEffect(() => {
-    function onExternalTaskSaved(e: Event) {
-      const task = (e as CustomEvent).detail as Task
-      if (task.case_id !== id) return
-      setCaseData((prev) => {
-        if (!prev) return prev
-        if ((prev.tasks ?? []).some((t) => t.id === task.id)) return prev
-        return { ...prev, tasks: [task, ...(prev.tasks ?? [])] }
-      })
+    function onExternalTaskSaved() {
+      // Re-fetch the case to get fresh tasks list from the server
+      fetch(`/api/cases/${id}`)
+        .then((r) => r.json())
+        .then((data) => { if (!data.error) setCaseData(data) })
+        .catch(() => {})
     }
     window.addEventListener('lawtask:task-saved', onExternalTaskSaved)
     return () => window.removeEventListener('lawtask:task-saved', onExternalTaskSaved)

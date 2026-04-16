@@ -33,7 +33,10 @@ export async function GET(request: Request) {
 
   const ascending = sortDir === 'asc'
   if (sortBy === 'due_date') {
-    query = query.order('due_date', { ascending, nullsFirst: false })
+    // Tasks with a due_date sorted first (ascending), then tasks without due_date sorted by newest first
+    query = query
+      .order('due_date', { ascending, nullsFirst: false })
+      .order('created_at', { ascending: false })
   } else if (sortBy === 'priority') {
     // We sort in JS after fetching for priority order
     query = query.order('created_at', { ascending: false })
