@@ -13,27 +13,33 @@ export default async function DashboardPage() {
   const in7Days = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
 
+  const activeStatuses = ['pending', 'active'] as const
+
   const [overdueRes, warningRes, weekRes, completedRes, urgentRes, casesRes] = await Promise.all([
     // Overdue
     supabase.from('tasks').select('id', { count: 'exact' })
-      .eq('user_id', user.id).eq('status', 'pending').lt('due_date', today),
+      .eq('user_id', user.id).in('status', activeStatuses).lt('due_date', today),
     // Warning (due in ≤3 days, not yet overdue)
     supabase.from('tasks').select('id', { count: 'exact' })
-      .eq('user_id', user.id).eq('status', 'pending').gte('due_date', today).lte('due_date', in3Days),
+      .eq('user_id', user.id).in('status', activeStatuses).gte('due_date', today).lte('due_date', in3Days),
     // This week
     supabase.from('tasks').select('id', { count: 'exact' })
-      .eq('user_id', user.id).eq('status', 'pending').gte('due_date', today).lte('due_date', in7Days),
+      .eq('user_id', user.id).in('status', activeStatuses).gte('due_date', today).lte('due_date', in7Days),
     // Completed this month
     supabase.from('tasks').select('id', { count: 'exact' })
       .eq('user_id', user.id).eq('status', 'completed').gte('completed_at', startOfMonth),
     // Urgent pending tasks
     supabase.from('tasks')
       .select('*, cases(id, case_number, case_name, court)')
-      .eq('user_id', user.id).eq('status', 'pending').eq('priority', 'urgent')
+      .eq('user_id', user.id).in('status', activeStatuses).eq('priority', 'urgent')
       .order('due_date', { ascending: true, nullsFirst: false }).limit(5),
     // Active cases
     supabase.from('cases').select('*, tasks!left(id, status)').eq('user_id', user.id).order('created_at', { ascending: false }).limit(6),
   ])
+
+  const rawName = (user.user_metadata?.full_name as string | undefined) ?? ''
+  // Strip leading attorney title prefixes so greeting doesn't duplicate "עורך דין"
+  const userName = rawName.replace(/^(עו"ד|עו״ד|עורך דין)\s*/u, '').trim()
 
   return (
     <DashboardClient
@@ -45,6 +51,7 @@ export default async function DashboardPage() {
       }}
       urgentTasks={(urgentRes.data ?? []) as never}
       cases={(casesRes.data ?? []) as never}
+      userName={userName}
     />
   )
 }

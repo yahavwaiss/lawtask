@@ -17,7 +17,7 @@ export function BottomNav() {
 
   return (
     <div className="glass-nav border-t border-[#c4c6d0]/15 dark:border-[#334155] shadow-[0_-4px_20px_-2px_rgba(0,36,82,0.06)] dark:shadow-[0_-4px_20px_-2px_rgba(0,0,0,0.4)]">
-      <div className="flex flex-row-reverse justify-around items-center px-2 pb-6 pt-2">
+      <div className="flex flex-row-reverse justify-around items-center px-2 pt-2" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
         {tabs.map((tab) => {
           const isActive =
             tab.href === '/tasks'

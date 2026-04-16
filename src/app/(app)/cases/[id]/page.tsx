@@ -106,7 +106,7 @@ export default function CaseDetailPage() {
 
   if (!caseData) return null
 
-  const activeTasks = caseData.tasks?.filter((t) => t.status === 'pending') ?? []
+  const activeTasks = caseData.tasks?.filter((t) => t.status !== 'completed') ?? []
   const completedTasks = caseData.tasks?.filter((t) => t.status === 'completed') ?? []
   const displayedTasks = activeTab === 'active' ? activeTasks : completedTasks
 

@@ -19,6 +19,21 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: 'LawTask — ניהול משימות משפטיות',
   description: 'מערכת ניהול משימות לעורכי דין',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'LawTask',
+  },
+  icons: {
+    apple: '/icons/icon-192.png',
+  },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

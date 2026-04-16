@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { clsx } from 'clsx'
 import Link from 'next/link'
 import { TaskCard } from '@/components/tasks/TaskCard'
@@ -26,6 +27,7 @@ interface DashboardClientProps {
   stats: Stats
   urgentTasks: Task[]
   cases: CaseWithCount[]
+  userName?: string
 }
 
 const statCards = (stats: Stats) => [
@@ -79,9 +81,16 @@ const statCards = (stats: Stats) => [
   },
 ]
 
-export function DashboardClient({ stats, urgentTasks, cases }: DashboardClientProps) {
+export function DashboardClient({ stats, urgentTasks, cases, userName }: DashboardClientProps) {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+  const router = useRouter()
   const cards = statCards(stats)
+
+  useEffect(() => {
+    function onTaskSaved() { router.refresh() }
+    window.addEventListener('lawtask:task-saved', onTaskSaved)
+    return () => window.removeEventListener('lawtask:task-saved', onTaskSaved)
+  }, [router])
 
   return (
     <div className="space-y-10">
@@ -89,7 +98,9 @@ export function DashboardClient({ stats, urgentTasks, cases }: DashboardClientPr
       <div className="flex items-end justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-gold/60 mb-1">לוח בקרה</p>
-          <h1 className="text-2xl font-headline font-bold text-app-primary leading-tight">שלום, עורך דין</h1>
+          <h1 className="text-2xl font-headline font-bold text-app-primary leading-tight">
+            שלום, עורך דין{userName ? ` ${userName}` : ''}
+          </h1>
           <p className="text-app-secondary text-sm mt-1">סיכום המשימות שלך להיום</p>
         </div>
         <Link
@@ -165,7 +176,7 @@ export function DashboardClient({ stats, urgentTasks, cases }: DashboardClientPr
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {cases.map((c) => {
-              const openCount = c.tasks?.filter((t) => t.status === 'pending').length ?? 0
+              const openCount = c.tasks?.filter((t) => t.status !== 'completed').length ?? 0
               const doneCount = c.tasks?.filter((t) => t.status === 'completed').length ?? 0
               return (
                 <Link

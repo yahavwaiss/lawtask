@@ -23,9 +23,13 @@ export async function GET(request: Request) {
     .select('*, cases(id, case_number, case_name, court)')
     .eq('user_id', user.id)
 
-  if (status !== 'all') {
+  if (status === 'pending') {
+    // DB may store 'active' or 'pending' — treat both as active/pending
+    query = query.in('status', ['pending', 'active'])
+  } else if (status === 'completed') {
     query = query.eq('status', status)
   }
+  // status === 'all' → no filter
   if (type) query = query.eq('type', type)
   if (priority) query = query.eq('priority', priority)
   if (court) query = query.eq('court', court)

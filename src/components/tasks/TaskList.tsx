@@ -87,8 +87,8 @@ export function TaskList({ defaultType, showFilters = true, showArchived = false
         }
         return next
       }
-      // New task
-      if (!showArchived && saved.status === 'pending') {
+      // New task — handle both 'pending' and legacy 'active' status
+      if (!showArchived && saved.status !== 'completed') {
         return [saved, ...prev]
       }
       return prev
