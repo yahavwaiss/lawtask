@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:fix-priority": "node scripts/fix-priority-constraint.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.46.0",

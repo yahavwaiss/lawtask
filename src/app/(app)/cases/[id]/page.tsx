@@ -42,6 +42,20 @@ export default function CaseDetailPage() {
       .finally(() => setLoading(false))
   }, [id, router])
 
+  useEffect(() => {
+    function onExternalTaskSaved(e: Event) {
+      const task = (e as CustomEvent).detail as Task
+      if (task.case_id !== id) return
+      setCaseData((prev) => {
+        if (!prev) return prev
+        if ((prev.tasks ?? []).some((t) => t.id === task.id)) return prev
+        return { ...prev, tasks: [task, ...(prev.tasks ?? [])] }
+      })
+    }
+    window.addEventListener('lawtask:task-saved', onExternalTaskSaved)
+    return () => window.removeEventListener('lawtask:task-saved', onExternalTaskSaved)
+  }, [id])
+
   async function handleExportPdf() {
     setExportingPdf(true)
     try {

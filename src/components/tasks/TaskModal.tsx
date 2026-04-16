@@ -111,13 +111,21 @@ export function TaskModal({ open, onClose, mode, task, defaultType, onSaved, onD
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      if (!res.ok) throw new Error('Failed to save')
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null)
+        const msg = errData?.error
+          ? typeof errData.error === 'string'
+            ? errData.error
+            : JSON.stringify(errData.error)
+          : `שגיאה ${res.status}`
+        throw new Error(msg)
+      }
       const saved: Task = await res.json()
       toast.success(isCreating ? 'משימה נוצרה!' : 'משימה עודכנה!')
       onSaved?.(saved)
       handleClose()
-    } catch {
-      toast.error('שגיאה בשמירה')
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'שגיאה בשמירה')
     } finally {
       setSaving(false)
     }

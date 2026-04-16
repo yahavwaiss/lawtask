@@ -62,6 +62,19 @@ export function TaskList({ defaultType, showFilters = true, showArchived = false
     loadTasks()
   }, [loadTasks])
 
+  useEffect(() => {
+    function onExternalTaskSaved(e: Event) {
+      const saved = (e as CustomEvent<Task>).detail
+      setTasks((prev) => {
+        if (prev.some((t) => t.id === saved.id)) return prev
+        if (!showArchived && saved.status === 'pending') return [saved, ...prev]
+        return prev
+      })
+    }
+    window.addEventListener('lawtask:task-saved', onExternalTaskSaved)
+    return () => window.removeEventListener('lawtask:task-saved', onExternalTaskSaved)
+  }, [showArchived])
+
   function handleTaskClick(task: Task) {
     setSelectedTask(task)
     setModalOpen(true)

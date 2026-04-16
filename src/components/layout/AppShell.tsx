@@ -49,6 +49,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         open={taskModalOpen}
         onClose={() => setTaskModalOpen(false)}
         mode="create"
+        onSaved={(task) => {
+          window.dispatchEvent(new CustomEvent('lawtask:task-saved', { detail: task }))
+        }}
       />
     </div>
   )
